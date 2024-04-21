@@ -224,6 +224,18 @@ void test ()
     ResultChecker::check (result->rhs, 4);
     assert (result->type == Tokeniser::Type::multiply);
 
+    result = Tokeniser ().tokenise ("8 / 4");
+    assert (result.has_value ());
+    ResultChecker::check (result->lhs, 8);
+    ResultChecker::check (result->rhs, 4);
+    assert (result->type == Tokeniser::Type::divide);
+
+    result = Tokeniser ().tokenise ("10 / 5");
+    assert (result.has_value ());
+    ResultChecker::check (result->lhs, 10);
+    ResultChecker::check (result->rhs, 5);
+    assert (result->type == Tokeniser::Type::divide);
+
     result = Tokeniser ().tokenise ("pi * 5");
     assert (result.has_value ());
     ResultChecker::check (result->lhs, pi);
@@ -233,6 +245,8 @@ void test ()
     ResultChecker::check (Calculator ().calculate ({ 10, 4, Tokeniser::Type::multiply }), 40);
     ResultChecker::check (Calculator ().calculate ({ 25.3, 18.6, Tokeniser::Type::add }), 43.9);
     ResultChecker::check (Calculator ().calculate ({ 3, 5.6, Tokeniser::Type::subtract }), -2.6);
+    ResultChecker::check (Calculator ().calculate ({ 3, 96, Tokeniser::Type::divide }), 0.03125);
+    ResultChecker::check (Calculator ().calculate ({ 10, 0.1, Tokeniser::Type::divide }), 100);
     ResultChecker::check (Calculator ().calculate ({ pi, 3, Tokeniser::Type::add }), 6.14159);
     ResultChecker::check (Calculator ().calculate ({ 3, pi, Tokeniser::Type::multiply }), 9.42478);
     ResultChecker::check (Calculator ().calculate ({ pi, 5, Tokeniser::Type::multiply }), 15.708);
