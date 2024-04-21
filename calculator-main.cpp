@@ -132,7 +132,11 @@ public:
             case Tokeniser::Type::multiply:
                 return tokens.lhs * tokens.rhs;
             case Tokeniser::Type::divide:
-                return tokens.lhs / tokens.rhs;
+                if (tokens.rhs != 0) {
+                    return tokens.lhs / tokens.rhs;
+                } else {
+                    std::cerr << "There was an error, cannot divide by 0, please try again..." << std::endl;
+                }
             default:
                 break;
         }
