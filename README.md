@@ -1,4 +1,5 @@
 # Ampify engineering placement test
+https://github.com/dib-len/focusrite-placement-test
 
 This repository contains my answers for the technical tests for engineering placement students at Ampify.
 
