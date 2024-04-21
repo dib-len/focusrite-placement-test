@@ -6,14 +6,20 @@ def main():
     response.raise_for_status()
     data = response.json()
 
-    # Parse the response and sort it into a set of genres
-    genres = set()
-        
+    genres = {}
+
     for pack in data['packs']:
         for genre in pack['genres']:
-            genres.add(genre)
+            if genre not in genres:
+                genres[genre] = []
+            genres[genre].append(pack['name'])
 
-    print(list(genres))
+    print(sorted(genres.keys())) # prints out a list of all the genres sorted
+
+    if 'hip-hop' in genres:
+        print("\nPacks in 'hip-hop' genre:")
+        for pack in genres['hip-hop']:
+            print(pack) # prints out a list of all the packs in the genre ‘hip-hop’
 
 if __name__ == "__main__":
     main()
