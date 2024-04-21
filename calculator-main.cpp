@@ -15,7 +15,7 @@ public:
         add,
         subtract,
         multiply,
-        
+        divide,
         unknown,
     };
     
@@ -75,7 +75,7 @@ private:
         if (find (input, "+")) return Type::add;
         if (find (input, "-")) return Type::subtract;
         if (find (input, "*")) return Type::multiply;
-        
+        if (find (input, "/")) return Type::divide;
         return Type::unknown;
     }
     
@@ -88,6 +88,9 @@ private:
             return result;
             
         if (auto result = findAndExtractLHS (input, "*"))
+            return result;
+
+        if (auto result = findAndExtractLHS (input, "/"))
             return result;
             
         return {};
@@ -104,6 +107,9 @@ private:
         if (auto result = findAndExtractRHS (input, "*"))
             return result;
             
+        if (auto result = findAndExtractRHS (input, "/"))
+            return result;
+
         return {};
     }
 };
@@ -125,6 +131,8 @@ public:
                 return tokens.lhs - tokens.rhs;
             case Tokeniser::Type::multiply:
                 return tokens.lhs * tokens.rhs;
+            case Tokeniser::Type::divide:
+                return tokens.lhs / tokens.rhs;
             default:
                 break;
         }
