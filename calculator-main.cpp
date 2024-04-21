@@ -6,6 +6,8 @@
 #include <cstdlib>
 #include <cassert>
 
+const double pi = 3.14159265359;
+
 class Tokeniser
 {
 public:
@@ -57,16 +59,26 @@ private:
     std::optional <double> findAndExtractLHS (std::string input, std::string character) const
     {
         if (auto pos = input.find (character); pos != std::string::npos)
-            return std::stod (input.substr (0, pos));
-            
+        {
+            std::string lhs = input.substr(0, pos);
+            lhs.erase(std::remove(lhs.begin(), lhs.end(), ' '), lhs.end());
+            if (lhs == "pi")
+                return pi;
+            return std::stod(lhs);
+        }
         return {};
     }
     
     std::optional <double> findAndExtractRHS (std::string input, std::string character) const
     {
         if (auto pos = input.find (character); pos != std::string::npos)
-            return std::stod (input.substr (pos + 1));
-            
+        {
+            std::string rhs = input.substr(pos + 1);
+            rhs.erase(std::remove(rhs.begin(), rhs.end(), ' '), rhs.end());
+            if (rhs == "pi")
+                return pi;
+            return std::stod(rhs);
+        }
         return {};
     }
 
@@ -212,9 +224,18 @@ void test ()
     ResultChecker::check (result->rhs, 4);
     assert (result->type == Tokeniser::Type::multiply);
 
+    result = Tokeniser ().tokenise ("pi * 5");
+    assert (result.has_value ());
+    ResultChecker::check (result->lhs, pi);
+    ResultChecker::check (result->rhs, 5);
+    assert (result->type == Tokeniser::Type::multiply);
+
     ResultChecker::check (Calculator ().calculate ({ 10, 4, Tokeniser::Type::multiply }), 40);
     ResultChecker::check (Calculator ().calculate ({ 25.3, 18.6, Tokeniser::Type::add }), 43.9);
-    ResultChecker::check (Calculator ().calculate ({ 3, 5.6, Tokeniser::Type::subtract }), 2.6);
+    ResultChecker::check (Calculator ().calculate ({ 3, 5.6, Tokeniser::Type::subtract }), -2.6);
+    ResultChecker::check (Calculator ().calculate ({ pi, 3, Tokeniser::Type::add }), 6.14159);
+    ResultChecker::check (Calculator ().calculate ({ 3, pi, Tokeniser::Type::multiply }), 9.42478);
+    ResultChecker::check (Calculator ().calculate ({ pi, 5, Tokeniser::Type::multiply }), 15.708);
 }
 
 void run ()
